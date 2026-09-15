@@ -1,0 +1,37 @@
+name: Unpack BUILD 15
+on:
+  push:
+    paths:
+      - "*.zip"
+      - ".github/workflows/unpack-build.yml"
+permissions:
+  contents: write
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Flatten project to repo root
+        run: |
+          set -e
+          zipfile=$(ls *.zip | head -n 1)
+          unzip -o "$zipfile" -d _unpack
+          if [ -f _unpack/netlify.toml ]; then
+            src=_unpack
+          elif [ -f _unpack/TROTIE_MAISON_LAUNCH_BUILD/netlify.toml ]; then
+            src=_unpack/TROTIE_MAISON_LAUNCH_BUILD
+          else
+            src=$(find _unpack -name netlify.toml -print -quit | xargs dirname)
+          fi
+          shopt -s dotglob
+          cp -R "$src"/* .
+          rm -rf _unpack *.zip
+          test -f netlify.toml
+          test -d netlify/functions
+          test -f package.json
+          test -d src
+          test -d public
+          test -d content
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Unpack BUILD 15 project root"
