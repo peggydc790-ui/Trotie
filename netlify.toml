@@ -23,29 +23,7 @@
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
-[[redirects]]
-  from = "/api/admin"
-  to = "/.netlify/functions/admin"
-  status = 200
-  force = true
 
-[[redirects]]
-  from = "/api/telegram-webhook"
-  to = "/.netlify/functions/telegram-webhook"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/api/catalog"
-  to = "/.netlify/functions/catalog"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/api/media/*"
-  to = "/.netlify/functions/media"
-  status = 200
-  force = true
 
 [[redirects]]
   from = "/piece/:slug"
