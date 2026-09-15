@@ -1,0 +1,279 @@
+---
+import '../styles/tokens.css';
+---
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#0A0807" />
+    <title>Atelier — TROTIE MAISON</title>
+    <link rel="icon" type="image/png" href="/assets/tm-emblem-exact.png" />
+  </head>
+  <body>
+    <div class="stage">
+      <img class="bg" src="/assets/lifestyle/night-maison.jpg" alt="" />
+      <div class="veil"></div>
+
+      <section class="gate" id="gate">
+        <p class="mark">tm</p>
+        <h1>Atelier</h1>
+        <p class="sub">Private house desk. Not part of the storefront.</p>
+        <form id="unlock">
+          <input type="password" id="pin" autocomplete="current-password" placeholder="House key" />
+          <input type="password" id="admin-key" autocomplete="off" placeholder="ADMIN_KEY from Netlify" />
+          <button type="submit">Enter</button>
+        </form>
+        <p class="hint" id="gate-err">House key: maison. ADMIN_KEY must match the Netlify variable exactly.</p>
+      </section>
+
+      <main class="desk" id="desk" hidden>
+        <header class="desk-top">
+          <div>
+            <p class="mark">tm</p>
+            <h1>Atelier</h1>
+          </div>
+          <button type="button" id="lock">Lock</button>
+        </header>
+
+        <section class="ledger">
+          <div class="lead">
+            <h2>Launch pieces</h2>
+            <p>Nothing here is published until you download the file and replace <code>content/products.json</code>.</p>
+          </div>
+          <div id="list" class="list"></div>
+        </section>
+
+        <section class="compose">
+          <h2>New piece</h2>
+          <form id="piece">
+            <label>Name<input name="name" required /></label>
+            <label>Slug<input name="slug" required placeholder="ref-001" /></label>
+            <label>Reference<input name="reference" /></label>
+            <label>Price NGN<input name="price_ngn" type="number" min="1" required /></label>
+            <label>Status
+              <select name="status">
+                <option>Available</option>
+                <option>Limited Stock</option>
+                <option>Sold Out</option>
+              </select>
+            </label>
+            <label>Image URL<input name="image" placeholder="/assets/pieces/ref-001.jpg" /></label>
+            <label class="wide">Short description<textarea name="description" rows="3"></textarea></label>
+            <button type="submit">Add to ledger</button>
+          </form>
+          <div class="exports">
+            <button type="button" id="download">Download products.json</button>
+            <button type="button" id="clear" class="ghost">Clear ledger</button>
+          </div>
+        </section>
+
+        <section class="compose" id="telegram-box">
+          <h2>Telegram Import</h2>
+          <p class="lead" id="tg-status">Set ADMIN_KEY, TELEGRAM_BOT_TOKEN and TELEGRAM_SOURCE_CHAT_ID in Netlify before using this desk.</p>
+          <p class="lead" id="tg-chats">No channel posts seen yet. Set the webhook, then post once in @trotiemaison01. The numeric chat ID will appear here.</p>
+          <div class="exports">
+            <button type="button" id="tg-check">Check for new products</button>
+            <button type="button" id="tg-hook" class="ghost">Set webhook</button>
+            <button type="button" id="tg-refresh" class="ghost">Refresh list</button>
+          </div>
+          <div id="tg-list" class="list"></div>
+        </section>
+      </main>
+    </div>
+    <script is:inline>
+    (() => {
+      const KEY = 'tm-atelier-v1';
+      const PIN = 'tm-atelier-pin';
+      const gate = document.getElementById('gate');
+      const desk = document.getElementById('desk');
+      const list = document.getElementById('list');
+      const read = () => {
+        try { const a = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(a) ? a : []; }
+        catch { return []; }
+      };
+      const write = (a) => localStorage.setItem(KEY, JSON.stringify(a));
+      const paint = () => {
+        const rows = read();
+        list.innerHTML = rows.length ? rows.map((p) => (
+          `<article><strong>${p.name}</strong><span>${p.reference || p.slug}</span><em>${p.status}</em><b>₦${Number(p.price_ngn).toLocaleString('en-NG')}</b></article>`
+        )).join('') : '<p class="empty">No pieces in the ledger yet.</p>';
+      };
+      const open = () => { gate.hidden = true; desk.hidden = false; paint(); };
+      const close = () => { desk.hidden = true; gate.hidden = false; };
+      if (sessionStorage.getItem(PIN) === '1') open();
+      document.getElementById('unlock').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const err = document.getElementById('gate-err');
+        const v = document.getElementById('pin').value.trim();
+        const k = document.getElementById('admin-key').value.trim();
+        if (v !== 'maison') {
+          if (err) err.textContent = 'House key is wrong. Use maison.';
+          return;
+        }
+        if (!k) {
+          if (err) err.textContent = 'Enter the ADMIN_KEY you set in Netlify.';
+          return;
+        }
+        sessionStorage.setItem(AK, k);
+        sessionStorage.setItem(PIN, '1');
+        open();
+        loadTg();
+      });
+      document.getElementById('lock').addEventListener('click', () => { sessionStorage.removeItem(PIN); close(); });
+      document.getElementById('piece').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const f = new FormData(e.target);
+        const row = {
+          slug: String(f.get('slug')).trim(),
+          name: String(f.get('name')).trim(),
+          reference: String(f.get('reference') || '').trim(),
+          price_ngn: Number(f.get('price_ngn')),
+          status: String(f.get('status')),
+          published: true,
+          description: String(f.get('description') || '').trim(),
+          images: [String(f.get('image') || '').trim()].filter(Boolean)
+        };
+        const all = read().filter((p) => p.slug !== row.slug);
+        all.push(row);
+        write(all);
+        e.target.reset();
+        paint();
+      });
+      document.getElementById('download').addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(read(), null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'products.json';
+        a.click();
+      });
+      document.getElementById('clear').addEventListener('click', () => { write([]); paint(); });
+
+      const AK = 'tm-admin-key';
+      const key = () => sessionStorage.getItem(AK) || '';
+      const api = (action, method, body) => fetch('/api/admin?action=' + action, {
+        method,
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': key() },
+        body: body ? JSON.stringify(body) : undefined
+      }).then(async (r) => {
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(data.error || r.statusText);
+        return data;
+      });
+      const tgList = document.getElementById('tg-list');
+      const tgStatus = document.getElementById('tg-status');
+      const drawTg = (data) => {
+        tgStatus.textContent = data.telegramConfigured
+          ? `Telegram token present. Source chat: ${data.sourceChat || 'not set — set TELEGRAM_SOURCE_CHAT_ID'}. Seed catalogue: ${data.seedCount} pieces.`
+          : 'TELEGRAM_BOT_TOKEN is not set in Netlify.';
+        const seen = data.seenChats || [];
+        const chatsEl = document.getElementById('tg-chats');
+        if (chatsEl) {
+          chatsEl.textContent = seen.length
+            ? seen.map((c) => `TELEGRAM_SOURCE_CHAT_ID = ${c.id}${c.username ? ' (' + c.username + ')' : c.title ? ' (' + c.title + ')' : ''}`).join(' · ')
+            : 'No channel posts seen yet. Set the webhook, then post once in the TROTIE MAISON channel. The numeric chat ID will appear here.';
+        }
+        const rows = data.imports || [];
+        tgList.innerHTML = rows.length ? rows.map((row) => {
+          const p = (data.catalog || []).find((x) => x.slug === row.productSlug) || {};
+          return `<article data-slug="${row.productSlug || ''}" data-key="${row.key || ''}">
+            <strong></strong>
+            <span>${p.price_ngn ? '₦' + Number(p.price_ngn).toLocaleString('en-NG') : 'PRICE NEEDS REVIEW'}</span>
+            <em>${row.status}</em>
+            <b>${row.imageCount || 0} images</b>
+            <div class="exports">
+              <button type="button" class="ghost tg-edit">Edit</button>
+              <button type="button" class="tg-pub">Publish</button>
+              <button type="button" class="ghost tg-skip">Skip</button>
+            </div>
+          </article>`;
+        }).join('') : '<p class="empty">No Telegram imports yet.</p>';
+        [...tgList.querySelectorAll('article')].forEach((el, i) => {
+          const row = rows[i];
+          const p = (data.catalog || []).find((x) => x.slug === row.productSlug) || {};
+          el.querySelector('strong').textContent = p.name || row.productSlug || 'Untitled';
+          el.querySelector('.tg-edit')?.addEventListener('click', async () => {
+            const name = prompt('Name', p.name || '');
+            if (name == null) return;
+            const price = prompt('Price NGN', p.price_ngn || '');
+            const status = prompt('Status (Available / Limited Stock / Sold Out)', p.status || 'Available');
+            const description = prompt('Customer description', p.description || '');
+            try {
+              await api('save', 'POST', { slug: p.slug, name, price_ngn: Number(price), status, description });
+              loadTg();
+            } catch (e) { alert(e.message); }
+          });
+          el.querySelector('.tg-pub')?.addEventListener('click', async () => {
+            try { await api('publish', 'POST', { slug: p.slug }); loadTg(); }
+            catch (e) { alert(e.message); }
+          });
+          el.querySelector('.tg-skip')?.addEventListener('click', async () => {
+            try { await api('skip', 'POST', { key: row.key, slug: p.slug }); loadTg(); }
+            catch (e) { alert(e.message); }
+          });
+        });
+      };
+      const loadTg = () => api('list', 'GET').then(drawTg).catch((e) => { tgStatus.textContent = e.message; });
+      const prevOpen = open;
+      // wrap open
+      document.getElementById('unlock').addEventListener('submit', () => {
+        const k = document.getElementById('admin-key').value.trim();
+        if (k) sessionStorage.setItem(AK, k);
+      });
+      const _open = open;
+      // call after existing open
+      const origOpen = open;
+      window.__tmLoadTg = loadTg;
+      document.getElementById('tg-refresh')?.addEventListener('click', loadTg);
+      document.getElementById('tg-check')?.addEventListener('click', async () => {
+        try { const r = await api('check', 'POST'); tgStatus.textContent = `Pulled ${r.pulled} update(s).`; loadTg(); }
+        catch (e) { tgStatus.textContent = e.message; }
+      });
+      document.getElementById('tg-hook')?.addEventListener('click', async () => {
+        tgStatus.textContent = 'Setting webhook…';
+        try {
+          const r = await api('webhook', 'POST');
+          const extra = r.last_error_message ? ` Telegram last error: ${r.last_error_message}` : '';
+          tgStatus.textContent = 'Webhook set: ' + (r.webhook || '') + extra;
+        } catch (e) {
+          tgStatus.textContent = 'SET WEBHOOK failed: ' + e.message;
+        }
+      });
+      if (sessionStorage.getItem(PIN) === '1') loadTg();
+    })();
+    </script>
+    <style>
+      html, body { margin: 0; min-height: 100%; background: #0a0807; color: #f3eee6; font-family: "TM Sans", Helvetica, sans-serif; }
+      .stage { min-height: 100svh; position: relative; }
+      .bg { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.35); }
+      .veil { position: fixed; inset: 0; background: linear-gradient(180deg, rgba(8,6,5,.55), rgba(8,6,5,.82)); }
+      .gate, .desk { position: relative; }
+      .gate { min-height: 100svh; display: grid; place-content: center; text-align: center; padding: 32px; }
+      .mark { font-family: "TM Serif", Georgia, serif; font-size: 28px; margin: 0; }
+      .gate h1, .desk-top h1 { font-family: "TM Classic", Palatino, serif; letter-spacing: .32em; font-weight: 500; font-size: clamp(28px, 6vw, 48px); margin: 8px 0; }
+      .sub, .hint, .lead p { color: #b7aea3; }
+      .hint { font-size: 12px; }
+      #unlock, #piece { display: grid; gap: 12px; }
+      input, select, textarea, button {
+        font: inherit; color: inherit; background: rgba(255,255,255,.06);
+        border: 1px solid rgba(255,255,255,.2); border-radius: 999px; min-height: 48px; padding: 10px 16px;
+      }
+      textarea { border-radius: 18px; resize: vertical; }
+      button { cursor: pointer; background: linear-gradient(180deg, #f7f1e8, #d9cbb3); color: #1a1410; letter-spacing: .14em; text-transform: uppercase; font-size: 11px; }
+      .desk { width: min(980px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 80px; }
+      .desk-top { display: flex; justify-content: space-between; align-items: end; margin-bottom: 36px; }
+      .compose, .ledger { background: rgba(12,10,8,.62); border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(18px); padding: 24px; border-radius: 28px; margin-bottom: 20px; }
+      #piece { grid-template-columns: 1fr 1fr; }
+      .wide { grid-column: 1 / -1; }
+      label { display: grid; gap: 6px; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: #c9c1b5; }
+      .list article { display: grid; grid-template-columns: 1.4fr 1fr auto auto; gap: 10px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+      .exports { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+      .ghost { background: transparent; color: #f3eee6; }
+      .empty { color: #b7aea3; }
+      @media (max-width: 700px) {
+        #piece { grid-template-columns: 1fr; }
+        .list article { grid-template-columns: 1fr; }
+      }
+    </style>
+  </body>
+</html>

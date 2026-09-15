@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+<Base title="Piece — TROTIE MAISON">
+  <Header />
+  <main class="container pdp" id="pdp"></main>
+  <Footer />
+</Base>
+<script is:inline>
+(() => {
+  const slug = location.pathname.split('/').filter(Boolean).pop();
+  const money = (n) => new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(n);
+  const wa = (p) => {
+    const sold = p.status === 'Sold Out';
+    const text = sold
+      ? `Hello TROTIE MAISON, I would like to enquire about ${p.name}`
+      : `Hello TROTIE MAISON, I would like to reserve ${p.name}${p.price_ngn ? ' — ' + money(p.price_ngn) : ''}`;
+    return `https://wa.me/2347011838440?text=${encodeURIComponent(text)}`;
+  };
+  fetch('/api/catalog', { cache: 'no-store' }).then((r) => r.ok ? r.json() : []).then((rows) => {
+    const p = (rows || []).find((x) => x.slug === slug);
+    const root = document.getElementById('pdp');
+    if (!p || !root) {
+      if (root) root.innerHTML = '<section class="missing"><p class="eyebrow">TROTIE MAISON / 404</p><h1 class="display">This piece isn’t here.</h1><a class="btn primary" href="/collection">View the collection</a></section>';
+      return;
+    }
+    document.title = `${p.name} — TROTIE MAISON`;
+    const sold = p.status === 'Sold Out';
+    root.innerHTML = `<div class="gallery">${(p.images||[]).map((src,i)=>`<div class="frame"><img src="${src}" alt="" /></div>`).join('')}</div><section class="details"><p class="eyebrow">${p.reference || 'TROTIE MAISON'} · ${p.status}</p><h1 class="display"></h1><p class="price">${money(p.price_ngn)}</p><p class="desc"></p><div class="actions"><a class="btn primary" href="${wa(p)}" target="_blank" rel="noopener noreferrer">${sold ? 'Enquire on WhatsApp' : 'Reserve on WhatsApp'}</a>${sold ? '' : `<button class="btn secondary" id="add" type="button" data-slug="${p.slug}">Add to Selection</button>`}</div><p class="note">Delivery across Nigeria. Fee confirmed on WhatsApp.</p></section>`;
+    root.querySelector('h1').textContent = p.name;
+    const desc = root.querySelector('.desc');
+    if (p.description) desc.textContent = p.description; else desc.remove();
+    document.getElementById('add')?.addEventListener('click', () => {
+      const key = 'tm-selection-v1';
+      let items = [];
+      try { const parsed = JSON.parse(localStorage.getItem(key) || '[]'); items = Array.isArray(parsed) ? parsed.filter((x) => typeof x === 'string') : []; } catch {}
+      if (!items.includes(p.slug)) items.push(p.slug);
+      localStorage.setItem(key, JSON.stringify(items.slice(0, 20)));
+      window.dispatchEvent(new Event('tm-selection-change'));
+    });
+  }).catch(() => {});
+})();
+</script>
+<style>
+.pdp { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; padding: 48px 0 80px; }
+.gallery { display: grid; gap: 10px; }
+.frame { background: var(--raised); aspect-ratio: 1; overflow: hidden; }
+.frame img { width: 100%; height: 100%; object-fit: cover; }
+.details { position: sticky; top: 96px; height: max-content; }
+.details h1 { font-size: clamp(44px, 6vw, 76px); margin: 10px 0 16px; }
+.price { font-size: 20px; }
+.desc { color: var(--mute); max-width: 460px; }
+.actions { display: grid; gap: 10px; margin: 28px 0; }
+.actions .btn { width: 100%; }
+.note { font-size: 13px; color: var(--mute); }
+.missing { min-height: 58vh; padding: 80px 0; }
+@media (max-width: 800px) { .pdp { grid-template-columns: 1fr; } .details { position: static; } }
+</style>

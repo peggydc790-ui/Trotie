@@ -1,0 +1,444 @@
+[
+  {
+    "slug": "hublot-watches",
+    "name": "Hublot Watches",
+    "reference": "HUBLOT-WATCHES",
+    "price_ngn": 30000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 1,
+    "description": "Hublot Watches",
+    "images": [
+      "/assets/pieces/hublot-watches.jpg"
+    ]
+  },
+  {
+    "slug": "poedagar-men-s-gift-set",
+    "name": "Poedagar Men's Gift Set",
+    "reference": "POEDAGAR-MEN-S-G",
+    "price_ngn": 41000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 2,
+    "description": "Poedagar Men's Gift Set",
+    "images": [
+      "/assets/pieces/poedagar-men-s-gift-set.jpg"
+    ]
+  },
+  {
+    "slug": "men-s-gift-set-class-confidence-in-one-box",
+    "name": "Men's Gift Set - Class & Confidence in One Box",
+    "reference": "MEN-S-GIFT-SET-C",
+    "price_ngn": 38000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 3,
+    "description": "Men's Gift Set - Class & Confidence in One Box",
+    "images": [
+      "/assets/pieces/men-s-gift-set-class-confidence-in-one-box.jpg"
+    ]
+  },
+  {
+    "slug": "hublot-rubber-compass",
+    "name": "HUBLOT RUBBER , COMPASS",
+    "reference": "HUBLOT-RUBBER-CO",
+    "price_ngn": 25000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 4,
+    "description": "HUBLOT RUBBER , COMPASS",
+    "images": [
+      "/assets/pieces/hublot-rubber-compass.jpg"
+    ]
+  },
+  {
+    "slug": "high-quality-cartier-skeleton-watch",
+    "name": "High Quality Cartier Skeleton Watch",
+    "reference": "HIGH-QUALITY-CAR",
+    "price_ngn": 100000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 5,
+    "description": "High Quality Cartier Skeleton Watch",
+    "images": [
+      "/assets/pieces/high-quality-cartier-skeleton-watch.jpg"
+    ]
+  },
+  {
+    "slug": "poedagar-female-luxury-gift-set",
+    "name": "POEDAGAR Female Luxury Gift Set",
+    "reference": "POEDAGAR-FEMALE-",
+    "price_ngn": 43000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 6,
+    "description": "POEDAGAR Female Luxury Gift Set",
+    "images": [
+      "/assets/pieces/poedagar-female-luxury-gift-set.jpg"
+    ]
+  },
+  {
+    "slug": "hublot-sets",
+    "name": "HUBLOT SETS",
+    "reference": "HUBLOT-SETS",
+    "price_ngn": 32000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 7,
+    "description": "HUBLOT SETS",
+    "images": [
+      "/assets/pieces/hublot-sets.jpg"
+    ]
+  },
+  {
+    "slug": "middle-grade-pin-time-ice-watch",
+    "name": "Middle Grade PIN TIME ICE WATCH",
+    "reference": "MIDDLE-GRADE-PIN",
+    "price_ngn": 50000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 8,
+    "description": "Middle Grade PIN TIME ICE WATCH",
+    "images": [
+      "/assets/pieces/middle-grade-pin-time-ice-watch.jpg"
+    ]
+  },
+  {
+    "slug": "high-quality-cartier-santos-full-body-stone",
+    "name": "High Quality CARTIER SANTOS FULL BODY STONE",
+    "reference": "HIGH-QUALITY-CAR",
+    "price_ngn": 370000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 9,
+    "description": "High Quality CARTIER SANTOS FULL BODY STONE",
+    "images": [
+      "/assets/pieces/high-quality-cartier-santos-full-body-stone.jpg"
+    ]
+  },
+  {
+    "slug": "patek-canvas-style",
+    "name": "PATEK CANVAS STYLE",
+    "reference": "PATEK-CANVAS-STY",
+    "price_ngn": 30000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 10,
+    "description": "PATEK CANVAS STYLE",
+    "images": [
+      "/assets/pieces/patek-canvas-style.jpg"
+    ]
+  },
+  {
+    "slug": "tomi-men-s-premium-gift-set-watch-wallet-pen",
+    "name": "TOMI Men’s Premium Gift Set – Watch, Wallet & Pen",
+    "reference": "TOMI-MEN-S-PREMI",
+    "price_ngn": 40000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 11,
+    "description": "TOMI Men’s Premium Gift Set – Watch, Wallet & Pen",
+    "images": [
+      "/assets/pieces/tomi-men-s-premium-gift-set-watch-wallet-pen.jpg"
+    ]
+  },
+  {
+    "slug": "montblanc-watch",
+    "name": "MONTBLANC WATCH",
+    "reference": "MONTBLANC-WATCH",
+    "price_ngn": 35000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 12,
+    "description": "MONTBLANC WATCH",
+    "images": [
+      "/assets/pieces/montblanc-watch.jpg"
+    ]
+  },
+  {
+    "slug": "hislon-watch",
+    "name": "HISLON WATCH",
+    "reference": "HISLON-WATCH",
+    "price_ngn": 38000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 13,
+    "description": "HISLON WATCH",
+    "images": [
+      "/assets/pieces/hislon-watch.jpg"
+    ]
+  },
+  {
+    "slug": "sabr-set-watch",
+    "name": "SABR SET WATCH",
+    "reference": "SABR-SET-WATCH",
+    "price_ngn": 30000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 14,
+    "description": "SABR SET WATCH",
+    "images": [
+      "/assets/pieces/sabr-set-watch.jpg"
+    ]
+  },
+  {
+    "slug": "casio-analog",
+    "name": "CASIO ANALOG",
+    "reference": "CASIO-ANALOG",
+    "price_ngn": 25000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 15,
+    "description": "CASIO ANALOG",
+    "images": [
+      "/assets/pieces/casio-analog.jpg"
+    ]
+  },
+  {
+    "slug": "casio-analog-2",
+    "name": "CASIO ANALOG",
+    "reference": "CASIO-ANALOG-2",
+    "price_ngn": 25000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 16,
+    "description": "CASIO ANALOG",
+    "images": [
+      "/assets/pieces/casio-analog-2.jpg"
+    ]
+  },
+  {
+    "slug": "poedagar-chain",
+    "name": "POEDAGAR CHAIN",
+    "reference": "POEDAGAR-CHAIN",
+    "price_ngn": 35000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 17,
+    "description": "POEDAGAR CHAIN",
+    "images": [
+      "/assets/pieces/poedagar-chain.jpg"
+    ]
+  },
+  {
+    "slug": "high-quality-y2k-watch",
+    "name": "HIGH QUALITY Y2K WATCH",
+    "reference": "HIGH-QUALITY-Y2K",
+    "price_ngn": 32000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 18,
+    "description": "HIGH QUALITY Y2K WATCH",
+    "images": [
+      "/assets/pieces/high-quality-y2k-watch.jpg"
+    ]
+  },
+  {
+    "slug": "montblanc-watch-2",
+    "name": "MONTBLANC WATCH",
+    "reference": "MONTBLANC-WATCH-",
+    "price_ngn": 35000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 19,
+    "description": "MONTBLANC WATCH",
+    "images": [
+      "/assets/pieces/montblanc-watch-2.jpg"
+    ]
+  },
+  {
+    "slug": "matturi-leather",
+    "name": "MATTURI LEATHER",
+    "reference": "MATTURI-LEATHER",
+    "price_ngn": 35000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 20,
+    "description": "MATTURI LEATHER",
+    "images": [
+      "/assets/pieces/matturi-leather.jpg"
+    ]
+  },
+  {
+    "slug": "highs-quality-luxury-patek-philippe-watch",
+    "name": "Highs Quality Luxury Patek Philippe Watch",
+    "reference": "HIGHS-QUALITY-LU",
+    "price_ngn": 100000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 21,
+    "description": "Highs Quality Luxury Patek Philippe Watch",
+    "images": [
+      "/assets/pieces/highs-quality-luxury-patek-philippe-watch.jpg"
+    ]
+  },
+  {
+    "slug": "vvs-moissanite-diamond-bitcoin-earring",
+    "name": "VVS Moissanite Diamond Bitcoin Earring",
+    "reference": "VVS-MOISSANITE-D",
+    "price_ngn": 115000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 23,
+    "description": "VVS Moissanite Diamond Bitcoin Earring",
+    "images": [
+      "/assets/pieces/vvs-moissanite-diamond-bitcoin-earring.jpg"
+    ]
+  },
+  {
+    "slug": "high-quality-luxury-rolex-day-date-black-dial-wa",
+    "name": "High Quality Luxury Rolex Day-Date BLACK Dial Watch",
+    "reference": "HIGH-QUALITY-LUX",
+    "price_ngn": 90000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 24,
+    "description": "High Quality Luxury Rolex Day-Date BLACK Dial Watch",
+    "images": [
+      "/assets/pieces/high-quality-luxury-rolex-day-date-black-dial-wa.jpg"
+    ]
+  },
+  {
+    "slug": "high-quality-luxury-rolex-watch",
+    "name": "High Quality Luxury Rolex Watch",
+    "reference": "HIGH-QUALITY-LUX",
+    "price_ngn": 90000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 25,
+    "description": "High Quality Luxury Rolex Watch",
+    "images": [
+      "/assets/pieces/high-quality-luxury-rolex-watch.jpg"
+    ]
+  },
+  {
+    "slug": "high-quality-luxury-hublot-watch",
+    "name": "High Quality Luxury Hublot Watch",
+    "reference": "HIGH-QUALITY-LUX",
+    "price_ngn": 170000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 26,
+    "description": "High Quality Luxury Hublot Watch",
+    "images": [
+      "/assets/pieces/high-quality-luxury-hublot-watch.jpg"
+    ]
+  },
+  {
+    "slug": "curren-leather-watch",
+    "name": "CURREN Leather Watch",
+    "reference": "CURREN-LEATHER-W",
+    "price_ngn": 35000,
+    "status": "Limited Stock",
+    "published": true,
+    "sortOrder": 27,
+    "description": "CURREN Leather Watch",
+    "images": [
+      "/assets/pieces/curren-leather-watch.jpg"
+    ]
+  },
+  {
+    "slug": "curren-rubber-strap-chronograph",
+    "name": "CURREN Rubber Strap Chronograph",
+    "reference": "CURREN-RUBBER-ST",
+    "price_ngn": 50000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 28,
+    "description": "CURREN Rubber Strap Chronograph",
+    "images": [
+      "/assets/pieces/curren-rubber-strap-chronograph.jpg"
+    ]
+  },
+  {
+    "slug": "high-quality-patek-phillipe-automatic",
+    "name": "HIGH QUALITY PATEK PHILLIPE _AUTOMATIC",
+    "reference": "HIGH-QUALITY-PAT",
+    "price_ngn": 140000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 29,
+    "description": "HIGH QUALITY PATEK PHILLIPE _AUTOMATIC",
+    "images": [
+      "/assets/pieces/high-quality-patek-phillipe-automatic.jpg"
+    ]
+  },
+  {
+    "slug": "high-quality-ap-stone-head-watch",
+    "name": "HIGH QUALITY AP STONE HEAD WATCH",
+    "reference": "HIGH-QUALITY-AP-",
+    "price_ngn": 135000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 30,
+    "description": "HIGH QUALITY AP STONE HEAD WATCH",
+    "images": [
+      "/assets/pieces/high-quality-ap-stone-head-watch.jpg"
+    ]
+  },
+  {
+    "slug": "poedagar-chain-2",
+    "name": "POEDAGAR CHAIN",
+    "reference": "POEDAGAR-CHAIN-2",
+    "price_ngn": 35000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 31,
+    "description": "POEDAGAR CHAIN",
+    "images": [
+      "/assets/pieces/poedagar-chain-2.jpg"
+    ]
+  },
+  {
+    "slug": "poedagar-ladies-watch",
+    "name": "POEDAGAR LADIES WATCH",
+    "reference": "POEDAGAR-LADIES-",
+    "price_ngn": 30000,
+    "status": "Limited Stock",
+    "published": true,
+    "sortOrder": 32,
+    "description": "POEDAGAR LADIES WATCH",
+    "images": [
+      "/assets/pieces/poedagar-ladies-watch.jpg"
+    ]
+  },
+  {
+    "slug": "tissot",
+    "name": "Tissot",
+    "reference": "TISSOT",
+    "price_ngn": 30000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 33,
+    "description": "Tissot",
+    "images": [
+      "/assets/pieces/tissot.jpg"
+    ]
+  },
+  {
+    "slug": "patek-phillipe",
+    "name": "PATEK PHILLIPE",
+    "reference": "PATEK-01",
+    "price_ngn": 100000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 8,
+    "description": "PATEK PHILLIPE",
+    "images": [
+      "/assets/pieces/patek-phillipe.jpg"
+    ]
+  },
+  {
+    "slug": "matturi-watch",
+    "name": "Matturi Watch",
+    "reference": "MATTURI-02",
+    "price_ngn": 40000,
+    "status": "Available",
+    "published": true,
+    "sortOrder": 25,
+    "description": "Matturi Watch",
+    "images": [
+      "/assets/pieces/matturi-watch.jpg"
+    ]
+  }
+]

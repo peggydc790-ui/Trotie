@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+<Base title="Page not found — TROTIE MAISON">
+  <Header />
+  <main class="container error">
+    <p class="eyebrow">TROTIE MAISON / 404</p>
+    <p class="num">404</p>
+    <h1 class="display">This piece isn’t here.</h1>
+    <p class="lead">The page may have moved, or the piece may not be listed.</p>
+    <div class="actions">
+      <a class="btn primary" href="/collection">View the collection</a>
+      <a class="btn secondary" href="/">Return Home</a>
+    </div>
+  </main>
+  <Footer />
+</Base>
+<style>
+.error { min-height: 62vh; padding: 80px 0; }
+.num { font-size: clamp(80px, 18vw, 180px); line-height: .8; opacity: .12; margin: 0; }
+.error h1 { font-size: clamp(44px, 8vw, 92px); margin: 12px 0 16px; }
+.lead { color: var(--mute); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+@media (max-width: 600px) { .actions .btn { width: 100%; } }
+</style>

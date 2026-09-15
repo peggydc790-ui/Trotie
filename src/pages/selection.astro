@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+<Base title="Your Selection — TROTIE MAISON" noindex>
+  <Header />
+  <main class="container page">
+    <p class="eyebrow">TROTIE MAISON / SELECTION</p>
+    <h1 class="display">Your selection.</h1>
+    <p class="intro">Keep a short list while you browse. Selection is stored only on this device. Checkout is on WhatsApp.</p>
+    <div id="list" class="list" aria-live="polite"></div>
+    <div id="empty" class="empty" hidden>
+      <strong>Your selection is empty.</strong>
+      <a class="btn primary" href="/collection">View the collection</a>
+    </div>
+    <div id="actions" hidden>
+      <a id="wa" class="btn primary" href="https://wa.me/2347011838440" target="_blank" rel="noopener noreferrer">Checkout on WhatsApp</a>
+      <button id="clear" class="text" type="button">Clear selection</button>
+      <p class="note">Availability and price are confirmed on WhatsApp before payment.</p>
+    </div>
+  </main>
+  <Footer />
+</Base>
+<script>
+import { buildSelectionWhatsApp } from '../lib/whatsapp';
+const KEY = 'tm-selection-v1';
+const list = document.querySelector('#list');
+const empty = document.querySelector('#empty');
+const actions = document.querySelector('#actions');
+const wa = document.querySelector('#wa');
+const clear = document.querySelector('#clear');
+const money = (v) => new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(v);
+const read = () => {
+  try {
+    const a = JSON.parse(localStorage.getItem(KEY) || '[]');
+    return Array.isArray(a) ? a.filter((x) => typeof x === 'string') : [];
+  } catch { return []; }
+};
+const save = (a) => {
+  localStorage.setItem(KEY, JSON.stringify([...new Set(a)].slice(0, 20)));
+  window.dispatchEvent(new Event('tm-selection-change'));
+};
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+async function render() {
+  const slugs = read();
+  let data = [];
+  try {
+    const r = await fetch('/selection-data.json', { cache: 'no-store' });
+    if (r.ok) data = await r.json();
+  } catch {}
+  const published = (Array.isArray(data) ? data : []).filter((p) => slugs.includes(p.slug) && p.published !== false);
+  save(published.map((p) => p.slug));
+  list.innerHTML = published.map((p) => {
+    const sold = p.status === 'Sold Out';
+    return `<article class="item">
+      <div>
+        <p class="eyebrow">${esc(p.reference || 'SELECTED PIECE')}</p>
+        <h2>${esc(p.name)}</h2>
+        <p>${money(p.price_ngn)} · ${esc(p.status)}</p>
+        ${sold ? '<p class="warn">This piece is currently sold out and cannot be reserved.</p>' : ''}
+      </div>
+      <button data-remove="${esc(p.slug)}" class="text" type="button">Remove</button>
+    </article>`;
+  }).join('');
+  empty.hidden = published.length > 0;
+  actions.hidden = published.length === 0;
+  list.querySelectorAll('[data-remove]').forEach((b) => {
+    b.addEventListener('click', () => {
+      save(read().filter((x) => x !== b.getAttribute('data-remove')));
+      render();
+    });
+  });
+  if (wa) wa.href = buildSelectionWhatsApp(published);
+}
+clear?.addEventListener('click', () => { save([]); render(); });
+window.addEventListener('storage', render);
+render();
+</script>
+<style>
+.page { padding: 56px 0 24px; min-height: 60vh; }
+.page h1 { font-size: clamp(52px, 10vw, 112px); margin: 0 0 16px; }
+.intro { max-width: 560px; color: var(--mute); margin-bottom: 40px; }
+.item { display: flex; justify-content: space-between; gap: 16px; padding: 22px 0; border-bottom: 1px solid var(--rule); }
+.item h2 { font-family: var(--serif); font-size: 28px; font-weight: 400; margin: 6px 0; }
+.item p { margin: 0; color: var(--mute); }
+.warn { color: var(--burgundy); margin-top: 8px !important; }
+.text { border-bottom: 1px solid var(--ink); padding: 8px 0; cursor: pointer; font-size: 13px; }
+.empty { padding: 32px; border: 1px solid var(--rule); display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+.empty strong { font-family: var(--serif); font-size: 28px; font-weight: 400; }
+#actions { margin-top: 28px; }
+.note { color: var(--mute); font-size: 13px; }
+@media (max-width: 700px) {
+  .empty, .item { flex-direction: column; align-items: flex-start; }
+  .empty .btn, #wa { width: 100%; }
+}
+</style>

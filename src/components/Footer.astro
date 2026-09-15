@@ -1,0 +1,40 @@
+---
+import { genericWhatsAppUrl } from '../lib/whatsapp';
+---
+<footer class="footer">
+  <img class="night" src="/assets/lifestyle/night-maison.jpg" alt="" />
+  <div class="veil"></div>
+  <div class="footer-inner">
+    <p class="word">TROTIE MAISON</p>
+    <nav class="glass-row">
+      <a class="glass-pill" href="/collection">Watches</a>
+      <a class="glass-pill" href="/house">The House</a>
+      <a class="glass-pill" href="/concierge">Concierge</a>
+      <a class="glass-pill" href="/policy">Policy</a>
+      <a class="glass-pill on" href={genericWhatsAppUrl()} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <span class="title-blackletter foot-s">Made for the top member</span>
+    <span>© {new Date().getFullYear()} TROTIE MAISON</span>
+  </div>
+</footer>
+<style>
+.footer { position: relative; margin-top: 0; overflow: hidden; color: var(--ivory); padding: 72px 0 calc(24px + env(safe-area-inset-bottom)); }
+.night { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.55); }
+.veil { position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,6,5,.82), rgba(8,6,5,.45)); }
+.footer-inner, .footer-bottom { position: relative; width: min(1180px, calc(100% - 40px)); margin: auto; }
+.word {
+  margin: 0 0 22px;
+  font-family: "TM Classic", "Palatino Linotype", Palatino, serif;
+  font-size: clamp(28px, 7vw, 52px);
+  letter-spacing: .28em;
+  text-indent: .2em;
+}
+.footer-bottom { margin-top: 40px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.16); display: flex; justify-content: space-between; gap: 16px; font-size: 11px; letter-spacing: .08em; }
+.foot-s { font-size: 22px; letter-spacing: 0; }
+@media (max-width: 700px) {
+  .footer-inner, .footer-bottom { width: calc(100% - 32px); }
+  .footer-bottom { flex-direction: column; }
+}
+</style>

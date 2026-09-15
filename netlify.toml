@@ -1,0 +1,70 @@
+[build]
+  command = "npm install && npx astro build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22.12.0"
+  NPM_CONFIG_PRODUCTION = "false"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/selection"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[redirects]]
+  from = "/api/admin"
+  to = "/.netlify/functions/admin"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/telegram-webhook"
+  to = "/.netlify/functions/telegram-webhook"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/catalog"
+  to = "/.netlify/functions/catalog"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/media/*"
+  to = "/.netlify/functions/media"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/piece/:slug"
+  to = "/piece-live"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
+  force = false
+
+[[headers]]
+  for = "/admin"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/atelier"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

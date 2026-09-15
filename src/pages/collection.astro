@@ -1,0 +1,115 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getPublishedProducts, money } from '../lib/products';
+import { genericWhatsAppUrl } from '../lib/whatsapp';
+const products = getPublishedProducts();
+---
+<Base title="The Collection — TROTIE MAISON">
+  <Header />
+  <main class="page">
+    <div class="container head">
+      <p class="eyebrow">Collection</p>
+      <h1 class="title-classic">The watches.</h1>
+    </div>
+    {products.length ? (
+      <div class="grid container" id="live-collection">
+        {products.map((p) => (
+          <article class="card">
+            <a href={`/piece/${p.slug}`}>
+              <div class="photo"><img src={p.images[0]} alt={p.name} /><em>{p.status}</em></div>
+              <div class="meta">
+                <div>
+                  <p class="eyebrow">{p.reference || 'TROTIE MAISON'}</p>
+                  <h2>{p.name}</h2>
+                </div>
+                <strong>{money(p.price_ngn)}</strong>
+              </div>
+            </a>
+            <div class="row">
+              <a href={`/piece/${p.slug}`}>View Piece</a>
+              {p.status !== 'Sold Out' && <button type="button" class="select-btn" data-slug={p.slug}>Add to Selection</button>}
+            </div>
+          </article>
+        ))}
+      </div>
+    ) : (
+      <div class="grid container" id="live-collection"></div>
+      <section class="night" id="empty-night">
+        <img src="/assets/lifestyle/night-maison.jpg" alt="" />
+        <div class="night-copy">
+          <h2 class="title-blackletter">No pieces listed.</h2>
+          <a class="glass-pill on" href={genericWhatsAppUrl()} target="_blank" rel="noopener noreferrer">Enquire on WhatsApp</a>
+        </div>
+      </section>
+    )}
+  </main>
+  <Footer />
+</Base>
+<script is:inline>
+(() => {
+  const KEY = 'tm-selection-v1';
+  document.querySelectorAll('[data-slug]').forEach((b) => {
+    b.addEventListener('click', () => {
+      let a = [];
+      try { const x = JSON.parse(localStorage.getItem(KEY) || '[]'); a = Array.isArray(x) ? x.filter((s) => typeof s === 'string') : []; } catch {}
+      const slug = b.getAttribute('data-slug');
+      if (slug && !a.includes(slug)) a.push(slug);
+      localStorage.setItem(KEY, JSON.stringify(a.slice(0, 20)));
+      window.dispatchEvent(new Event('tm-selection-change'));
+      b.textContent = 'Added to Selection';
+      setTimeout(() => { b.textContent = 'Add to Selection'; }, 1400);
+    });
+  });
+  const money = (n) => new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(n);
+  const bind = (root) => {
+    root.querySelectorAll('[data-slug]').forEach((b) => {
+      b.addEventListener('click', () => {
+        let a = [];
+        try { const x = JSON.parse(localStorage.getItem(KEY) || '[]'); a = Array.isArray(x) ? x.filter((s) => typeof s === 'string') : []; } catch {}
+        const slug = b.getAttribute('data-slug');
+        if (slug && !a.includes(slug)) a.push(slug);
+        localStorage.setItem(KEY, JSON.stringify(a.slice(0, 20)));
+        window.dispatchEvent(new Event('tm-selection-change'));
+        b.textContent = 'Added to Selection';
+        setTimeout(() => { b.textContent = 'Add to Selection'; }, 1400);
+      });
+    });
+  };
+  fetch('/api/catalog', { cache: 'no-store' }).then((r) => r.ok ? r.json() : []).then((rows) => {
+    if (!Array.isArray(rows) || !rows.length) return;
+    const grid = document.getElementById('live-collection');
+    if (!grid) return;
+    const have = new Set([...grid.querySelectorAll('a[href^="/piece/"]')].map((a) => a.getAttribute('href')));
+    rows.forEach((p) => {
+      if (!p.slug || have.has(`/piece/${p.slug}`)) return;
+      const el = document.createElement('article');
+      el.className = 'card';
+      el.innerHTML = `<a href="/piece/${p.slug}"><div class="photo"><img src="${p.images[0]}" alt="${p.name}" /><em>${p.status}</em></div><div class="meta"><div><p class="eyebrow">${p.reference || 'TROTIE MAISON'}</p><h2>${p.name}</h2></div><strong>${money(p.price_ngn)}</strong></div></a><div class="row"><a href="/piece/${p.slug}">View Piece</a>${p.status !== 'Sold Out' ? `<button type="button" class="select-btn" data-slug="${p.slug}">Add to Selection</button>` : ''}</div>`;
+      grid.appendChild(el);
+      have.add(`/piece/${p.slug}`);
+    });
+    const night = document.getElementById('empty-night');
+    if (night && grid.children.length) night.style.display = 'none';
+    bind(grid);
+  }).catch(() => {});
+})();
+</script>
+<style>
+.page { padding: 28px 0 0; }
+.head { padding-bottom: 28px; }
+.head h1 { font-size: clamp(42px, 10vw, 88px); margin: 0; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 16px; }
+.photo { position: relative; aspect-ratio: 1; background: var(--raised); }
+.photo img { width: 100%; height: 100%; object-fit: cover; }
+.photo em { position: absolute; left: 12px; bottom: 12px; background: var(--ground); padding: 5px 8px; font-style: normal; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+.meta { display: flex; justify-content: space-between; gap: 16px; padding-top: 12px; }
+.meta h2 { font-family: var(--serif); font-size: 28px; font-weight: 400; margin: 6px 0 0; }
+.row { display: flex; gap: 18px; margin-top: 10px; font-size: 13px; }
+.night { position: relative; min-height: 78vh; display: grid; place-items: end center; }
+.night img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.night-copy { position: relative; padding: 0 20px 56px; display: grid; justify-items: center; gap: 18px; text-align: center; }
+.night-copy h2 { margin: 0; font-size: clamp(36px, 8vw, 64px); color: #f6f0e6; text-shadow: 0 8px 28px rgba(0,0,0,.55); }
+@media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+</style>

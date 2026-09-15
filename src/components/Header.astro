@@ -1,0 +1,129 @@
+---
+---
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="TROTIE MAISON home">
+      <strong class="tm">tm</strong>
+    </a>
+    <nav class="desktop-nav" aria-label="Primary">
+      <a href="/collection">Watches</a>
+      <a href="/house">The House</a>
+      <a href="/concierge">Concierge</a>
+      <a href="/selection">Selection <span data-count>0</span></a>
+    </nav>
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span>
+    </button>
+  </div>
+  <div id="mobile-menu" class="mobile-menu is-closed" hidden>
+    <nav aria-label="Mobile">
+      <a href="/collection">Watches</a>
+      <a href="/house">The House</a>
+      <a href="/concierge">Concierge</a>
+      <a href="/selection">Selection <span data-count>0</span></a>
+    </nav>
+  </div>
+</header>
+
+<script is:inline>
+(() => {
+  const KEY = 'tm-selection-v1';
+  const toggle = document.querySelector('.menu-toggle');
+  const menu = document.querySelector('#mobile-menu');
+  const close = () => {
+    toggle?.setAttribute('aria-expanded', 'false');
+    toggle?.setAttribute('aria-label', 'Open menu');
+    if (menu) { menu.hidden = true; menu.classList.add('is-closed'); menu.classList.remove('is-open'); }
+    document.body.style.overflow = '';
+    toggle?.focus();
+  };
+  const open = () => {
+    toggle?.setAttribute('aria-expanded', 'true');
+    toggle?.setAttribute('aria-label', 'Close menu');
+    if (menu) { menu.hidden = false; menu.classList.add('is-open'); menu.classList.remove('is-closed'); }
+    document.body.style.overflow = 'hidden';
+    menu?.querySelector('a')?.focus();
+  };
+  toggle?.addEventListener('click', () => {
+    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+    isOpen ? close() : open();
+  });
+  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') close();
+  });
+
+  const count = () => {
+    try {
+      const a = JSON.parse(localStorage.getItem(KEY) || '[]');
+      return Array.isArray(a) ? a.length : 0;
+    } catch { return 0; }
+  };
+  const paint = (n) => document.querySelectorAll('[data-count]').forEach((el) => { el.textContent = String(n); });
+  paint(count());
+  fetch('/api/catalog', { cache: 'no-store' })
+    .then((r) => r.ok ? r.json() : Promise.reject())
+    .catch(() => fetch('/selection-data.json', { cache: 'no-store' }).then((r) => r.ok ? r.json() : []))
+    .then((data) => {
+      const slugs = new Set((Array.isArray(data) ? data : []).map((p) => p.slug));
+      let stored = [];
+      try {
+        const a = JSON.parse(localStorage.getItem(KEY) || '[]');
+        stored = Array.isArray(a) ? a.filter((x) => typeof x === 'string' && slugs.has(x)) : [];
+      } catch {}
+      localStorage.setItem(KEY, JSON.stringify(stored.slice(0, 20)));
+      paint(stored.length);
+    })
+    .catch(() => paint(count()));
+  window.addEventListener('storage', () => paint(count()));
+  window.addEventListener('tm-selection-change', () => paint(count()));
+})();
+</script>
+
+<style>
+.site-header { position: sticky; top: 0; z-index: 40; background: rgba(16,14,12,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--rule); padding-top: env(safe-area-inset-top); }
+.header-inner { width: min(1180px, calc(100% - 40px)); margin: auto; min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: flex; align-items: center; font-family: var(--serif); font-size: 28px; font-weight: 400; letter-spacing: 0; text-transform: none; }
+.brand img { width: 40px; height: 40px; object-fit: contain; }
+.brand-copy { display: grid; gap: 2px; min-width: 0; }
+.brand-copy strong { font-size: 13px; letter-spacing: .14em; font-weight: 600; }
+.brand-copy small { font-size: 9px; letter-spacing: .12em; color: var(--mute); }
+.desktop-nav { display: flex; align-items: center; gap: 26px; font-size: 14px; }
+.desktop-nav a { padding: 12px 0; }
+.menu-toggle { display: none; width: 48px; height: 48px; border: 1px solid var(--rule); flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.menu-toggle span { display: block; width: 16px; height: 1px; background: var(--ivory); }
+.mobile-menu,
+.mobile-menu.is-closed,
+.mobile-menu[hidden] { display: none !important; }
+.mobile-menu.is-open {
+  display: block !important;
+  position: fixed;
+  top: calc(70px + env(safe-area-inset-top));
+  left: 0; right: 0; bottom: 0;
+  z-index: 50;
+  background: rgba(10,8,7,.96);
+  padding: 20px 20px calc(24px + env(safe-area-inset-bottom));
+}
+.mobile-menu nav { display: grid; gap: 10px; }
+.mobile-menu a {
+  justify-content: center;
+  font-family: "TM Classic", "Palatino Linotype", Palatino, serif;
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  min-height: 48px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.28);
+  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.04));
+  backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+@media (max-width: 720px) {
+  .header-inner { width: calc(100% - 32px); min-height: 70px; }
+  .brand-copy small { display: none; }
+  .desktop-nav { display: none; }
+  .menu-toggle { display: flex; }
+}
+</style>

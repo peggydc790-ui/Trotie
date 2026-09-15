@@ -1,0 +1,15 @@
+[
+  {
+    "slug": "replace-with-verified-slug",
+    "name": "Replace with verified name",
+    "reference": "",
+    "price_ngn": 0,
+    "status": "Available",
+    "quantity": 1,
+    "description": "Replace every field with verified launch information before publishing.",
+    "specifications": [{ "label": "Case", "value": "Verified specification" }],
+    "images": ["/assets/products/replace-with-verified-slug/01.jpg"],
+    "published": false,
+    "sortOrder": 1
+  }
+]

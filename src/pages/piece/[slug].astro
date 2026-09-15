@@ -1,0 +1,95 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getPublishedProducts, money } from '../../lib/products';
+import { buildWhatsAppUrl } from '../../lib/whatsapp';
+
+export function getStaticPaths() {
+  return getPublishedProducts().map((product) => ({ params: { slug: product.slug }, props: { product } }));
+}
+
+const { product } = Astro.props;
+const sold = product?.status === 'Sold Out';
+const wa = product
+  ? buildWhatsAppUrl({ mode: sold ? 'enquire' : 'reserve', name: product.name, reference: product.reference, price: product.price_ngn })
+  : '';
+---
+<Base title={product ? `${product.name} — TROTIE MAISON` : 'Piece not found — TROTIE MAISON'} noindex={!product}>
+  <Header />
+  {product ? (
+    <main class="container pdp">
+      <div class="gallery">
+        {product.images.map((src, i) => (
+          <div class="frame"><img src={src} alt={`${product.name} — view ${i + 1}`} loading={i ? 'lazy' : 'eager'} /></div>
+        ))}
+      </div>
+      <section class="details">
+        <p class="eyebrow">{product.reference || 'TROTIE MAISON'} · {product.status}</p>
+        <h1 class="display">{product.name}</h1>
+        <p class="price">{money(product.price_ngn)}</p>
+        {product.description && <p class="desc">{product.description}</p>}
+        <div class="actions">
+          <a class="btn primary" href={wa} target="_blank" rel="noopener noreferrer">{sold ? 'Enquire on WhatsApp' : 'Reserve on WhatsApp'}</a>
+          {!sold && <button class="btn secondary" id="add" type="button" data-slug={product.slug}>Add to Selection</button>}
+        </div>
+        {product.specifications?.length ? (
+          <dl>
+            {product.specifications.map((s) => (
+              <div><dt>{s.label}</dt><dd>{s.value}</dd></div>
+            ))}
+          </dl>
+        ) : null}
+        <p class="note">Delivery across Nigeria. Fee confirmed on WhatsApp.</p>
+      </section>
+    </main>
+  ) : (
+    <main class="container missing">
+      <p class="eyebrow">TROTIE MAISON / 404</p>
+      <h1 class="display">This piece isn’t here.</h1>
+      <a class="btn primary" href="/collection">View the collection</a>
+    </main>
+  )}
+  <Footer />
+</Base>
+<script>
+const button = document.querySelector('#add');
+button?.addEventListener('click', () => {
+  const key = 'tm-selection-v1';
+  const slug = button.getAttribute('data-slug');
+  if (!slug) return;
+  let items = [];
+  try {
+    const parsed = JSON.parse(localStorage.getItem(key) || '[]');
+    items = Array.isArray(parsed) ? parsed.filter((x) => typeof x === 'string') : [];
+  } catch {}
+  if (!items.includes(slug)) items.push(slug);
+  localStorage.setItem(key, JSON.stringify(items.slice(0, 20)));
+  window.dispatchEvent(new Event('tm-selection-change'));
+  button.textContent = 'Added to Selection';
+  setTimeout(() => { button.textContent = 'Add to Selection'; }, 1400);
+});
+</script>
+<style>
+.pdp { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; padding: 48px 0 80px; }
+.gallery { display: grid; gap: 10px; }
+.frame { background: var(--paper-deep); aspect-ratio: 1; overflow: hidden; }
+.frame img { width: 100%; height: 100%; object-fit: cover; }
+.details { position: sticky; top: 96px; height: max-content; }
+.details h1 { font-size: clamp(44px, 6vw, 76px); margin: 10px 0 16px; }
+.price { font-size: 20px; }
+.desc { color: var(--mute); max-width: 460px; }
+.actions { display: grid; gap: 10px; margin: 28px 0; }
+.actions .btn { width: 100%; }
+dl { margin: 28px 0; border-top: 1px solid var(--rule); }
+dl div { display: grid; grid-template-columns: 1fr 1.4fr; padding: 12px 0; border-bottom: 1px solid var(--rule); font-size: 14px; }
+dt { color: var(--mute); }
+dd { margin: 0; }
+.note { font-size: 13px; color: var(--mute); }
+.missing { min-height: 58vh; padding: 80px 0; }
+.missing h1 { font-size: clamp(48px, 8vw, 96px); margin: 12px 0 24px; }
+@media (max-width: 800px) {
+  .pdp { grid-template-columns: 1fr; gap: 28px; }
+  .details { position: static; }
+}
+</style>

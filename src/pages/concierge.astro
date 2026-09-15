@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { genericWhatsAppUrl } from '../lib/whatsapp';
+---
+<Base title="Concierge — TROTIE MAISON">
+  <Header />
+  <section class="bleed"><img src="/assets/lifestyle/golf.jpg" alt="" /></section>
+  <main class="container page">
+    <p class="eyebrow">Concierge</p>
+    <h1 class="display">A direct route<br />to your watch.</h1>
+    <p class="lead">Looking for a particular piece or need help choosing? Speak with TROTIE MAISON directly on WhatsApp.</p>
+    <a class="btn primary" href={genericWhatsAppUrl()} target="_blank" rel="noopener noreferrer">WhatsApp TROTIE MAISON</a>
+    <div class="three">
+      <article><b>01</b><h2>Selection</h2><p>Tell us which piece caught your attention.</p></article>
+      <article><b>02</b><h2>Reservation</h2><p>We confirm the current price and availability with you.</p></article>
+      <article><b>03</b><h2>Delivery</h2><p>Delivery across Nigeria. Fee confirmed on WhatsApp.</p></article>
+    </div>
+  </main>
+  <Footer />
+</Base>
+<style>
+.page { padding: 64px 0; min-height: 62vh; }
+.page h1 { font-size: clamp(48px, 9vw, 104px); margin: 0 0 24px; }
+.lead { max-width: 620px; color: var(--mute); font-size: 19px; margin-bottom: 28px; }
+.three { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 72px; border-top: 1px solid var(--rule); }
+.three article { padding: 28px 24px 8px 0; border-right: 1px solid var(--rule); }
+.three article:last-child { border: 0; padding-right: 0; padding-left: 24px; }
+.three b { font-size: 13px; letter-spacing: .16em; color: var(--mute); }
+.three h2 { font-family: var(--serif); font-size: 28px; font-weight: 400; }
+.three p { color: var(--mute); }
+@media (max-width: 700px) {
+  .page .btn { width: 100%; }
+  .three { grid-template-columns: 1fr; }
+  .three article, .three article:last-child { padding: 24px 0; border-right: 0; border-bottom: 1px solid var(--rule); }
+}
+.bleed img { width:100%; height:min(52vh,520px); object-fit:cover; object-position:center 65%; }
+</style>

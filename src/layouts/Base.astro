@@ -1,0 +1,43 @@
+---
+import '../styles/tokens.css';
+const {
+  title = 'TROTIE MAISON — Brand-new watches, selected in Nigeria.',
+  description = 'Brand-new watches, selected in Nigeria.',
+  noindex = false
+} = Astro.props;
+---
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? 'noindex,nofollow' : 'index,follow'} />
+    <meta name="theme-color" content="#100E0C" />
+    <link rel="icon" type="image/png" href="/assets/tm-emblem-exact.png" />
+    <title>{title}</title>
+      <style id="netlify-badge-kill">
+      [class*="netlify"], [id*="netlify-badge"], a[href*="netlify.com"][class],
+      body > a[href*="netlify.com"], .nf-badge { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <slot />
+    <script is:inline>
+      (() => {
+        const kill = () => {
+          document.querySelectorAll('#netlify-badge, .netlify-badge, [data-netlify-deploy], iframe[src*="/.netlify/scripts/hud"]').forEach((el) => el.remove());
+        };
+        kill();
+        new MutationObserver(kill).observe(document.documentElement, { childList: true, subtree: true });
+      })();
+    </script>
+      <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[href*="netlify.com"], iframe[src*="netlify"]').forEach((n) => {
+          const t = (n.textContent || '') + (n.getAttribute('aria-label') || '');
+          if (/powered by netlify/i.test(t) || /netlify.com\/?$/i.test(n.getAttribute('href') || '')) n.remove();
+        });
+      });
+    </script>
+  </body>
+</html>
