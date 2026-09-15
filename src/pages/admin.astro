@@ -157,8 +157,7 @@ import '../styles/tokens.css';
         body: body ? JSON.stringify(body) : undefined
       }).then(async (r) => {
         const data = await r.json().catch(() => ({}));
-        if (!r.ok) throw new Error(data.error || r.statusText);
-        return data;
+        if (!r.ok) throw new Error(data.error || r.statusText || (r.status + ' ' + (r.headers.get('content-type') || 'non-json')));
       });
       const tgList = document.getElementById('tg-list');
       const tgStatus = document.getElementById('tg-status');
